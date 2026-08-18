@@ -6,11 +6,11 @@ import { compileRule } from './utils/compile-rule.js';
 
 export async function pluginsToRulesDTS(plugins: Record<string, ESLint.Plugin>, options: RulesTypeGenOptions = {}): Promise<string> {
 	const {
-		includeTypeImports = true,
-		includeIgnoreComments = true,
-		includeAugmentation = true,
-		exportTypeName = 'RuleOptions',
 		compileOptions = {},
+		typeName = 'RuleOptions',
+		includeAugmentation = true,
+		includeIgnoreComments = true,
+		includeTypeImports = true,
 	} = options;
 
 	const rules: [name: string, rule: Rule.RuleModule][] = [];
@@ -45,7 +45,7 @@ export async function pluginsToRulesDTS(plugins: Record<string, ESLint.Plugin>, 
 		output.push(
 			`declare module 'eslint' {`,
 			`  namespace Linter {`,
-			`    interface RulesRecord extends ${exportTypeName} {}`,
+			`    interface RulesRecord extends ${typeName} {}`,
 			`  }`,
 			`}`,
 		);
@@ -55,7 +55,7 @@ export async function pluginsToRulesDTS(plugins: Record<string, ESLint.Plugin>, 
 		output.push('');
 	}
 
-	output.push(`export interface ${exportTypeName} {`);
+	output.push(`export interface ${typeName} {`);
 
 	for(const {typeName, name, jsdoc} of resolved) {
 		if(jsdoc?.length) {
